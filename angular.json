@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "projects": {
+    "client-portal": {
+      "projectType": "application",
+      "root": "apps/client-portal",
+      "sourceRoot": "apps/client-portal/src",
+      "prefix": "upgrade-to-nx",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/client-portal",
+            "index": "apps/client-portal/src/index.html",
+            "main": "apps/client-portal/src/main.ts",
+            "polyfills": "apps/client-portal/src/polyfills.ts",
+            "tsConfig": "apps/client-portal/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/client-portal/src/favicon.ico",
+              "apps/client-portal/src/assets"
+            ],
+            "styles": ["apps/client-portal/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/client-portal/src/environments/environment.ts",
+                  "with": "apps/client-portal/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "client-portal:build:production"
+            },
+            "development": {
+              "browserTarget": "client-portal:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "client-portal:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/client-portal/src/**/*.ts",
+              "apps/client-portal/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/client-portal"],
+          "options": {
+            "jestConfig": "apps/client-portal/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "client-portal-e2e": {
+      "root": "apps/client-portal-e2e",
+      "sourceRoot": "apps/client-portal-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/client-portal-e2e/cypress.json",
+            "devServerTarget": "client-portal:serve:development"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "client-portal:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/client-portal-e2e/**/*.{js,ts}"]
+          }
+        }
+      },
+      "tags": [],
+      "implicitDependencies": ["client-portal"]
+    }
+  }
+}
